@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic-Tac-Toe Khel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 150px; /* Increased top margin to move game further down */
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 250px); /* Further increased cell size */
+            grid-gap: 20px; /* Larger gap between cells */
+        }
+        .cell {
+            width: 250px; /* Increased cell width */
+            height: 250px; /* Increased cell height */
+            background-color: lightgray;
+            font-size: 64px; /* Increased font size */
+            text-align: center;
+            line-height: 250px; /* Match new cell height */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .cell:hover {
+            background-color: #ddd;
+        }
+        .cell.win {
+            background-color: lightgreen;
+        }
+        .message {
+            margin-top: 40px; /* Increased margin for message */
+            font-size: 36px; /* Increased font size for message */
+            text-align: center;
+        }
+        button {
+            margin-top: 40px; /* Increased margin for button */
+            padding: 20px 40px; /* Larger padding for button */
+            font-size: 24px; /* Increased font size for button */
+        }
+    </style>
+    <script>
+        let turn = 'X';
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let gameOver = false;
+
+        function makeMove(cell, index) {
+            if (cell.innerText === '' && !gameOver) {
+                cell.innerText = turn;
+                board[index] = turn;
+                if (checkWin()) {
+                    document.getElementById('message').innerText = turn + ' jeet gaya!';
+                    highlightWin();
+                    gameOver = true;
+                } else if (board.every(cell => cell)) {
+                    document.getElementById('message').innerText = 'Khel draw ho gaya!';
+                    gameOver = true;
+                } else {
+                    turn = turn === 'X' ? 'O' : 'X';
+                }
+            }
+        }
+
+        function checkWin() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            return winPatterns.some(pattern => {
+                const [a, b, c] = pattern;
+                return board[a] && board[a] === board[b] && board[a] === board[c];
+            });
+        }
+
+        function highlightWin() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            winPatterns.forEach(pattern => {
+                const [a, b, c] = pattern;
+                if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                    document.querySelectorAll('.cell')[a].classList.add('win');
+                    document.querySelectorAll('.cell')[b].classList.add('win');
+                    document.querySelectorAll('.cell')[c].classList.add('win');
+                }
+            });
+        }
+
+        function resetGame() {
+            turn = 'X';
+            board = ['', '', '', '', '', '', '', '', ''];
+            gameOver = false;
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.innerText = '';
+                cell.classList.remove('win');
+            });
+            document.getElementById('message').innerText = '';
+        }
+    </script>
+</head>
+<body>
+    <h1>Tic-Tac-Toe Khel</h1>
+    <div class="grid">
+        <div class="cell" onclick="makeMove(this, 0)" aria-label="Cell 1"></div>
+        <div class="cell" onclick="makeMove(this, 1)" aria-label="Cell 2"></div>
+        <div class="cell" onclick="makeMove(this, 2)" aria-label="Cell 3"></div>
+        <div class="cell" onclick="makeMove(this, 3)" aria-label="Cell 4"></div>
+        <div class="cell" onclick="makeMove(this, 4)" aria-label="Cell 5"></div>
+        <div class="cell" onclick="makeMove(this, 5)" aria-label="Cell 6"></div>
+        <div class="cell" onclick="makeMove(this, 6)" aria-label="Cell 7"></div>
+        <div class="cell" onclick="makeMove(this, 7)" aria-label="Cell 8"></div>
+        <div class="cell" onclick="makeMove(this, 8)" aria-label="Cell 9"></div>
+    </div>
+    <div class="message" id="message"></div>
+    <button onclick="resetGame()">Naya Khel Shuru Karo</button>
+</body>
+</html>
